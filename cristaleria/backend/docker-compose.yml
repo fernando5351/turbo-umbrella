@@ -1,0 +1,21 @@
+version: '3.1'
+
+services: 
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=pets
+      - POSTGRES_USER=schiffer
+      - POSTGRES_PASSWORD=kira002
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/postgres_data:/var/lib/postgresql/data
+  # servicio de  la aplicación en contenedor Docker
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=friend@pets.com
+      - PGADMIN_DEFAULT_PASSWORD=petfriend
+    ports:
+      - 5050:80

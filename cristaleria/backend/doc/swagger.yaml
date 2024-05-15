@@ -1,0 +1,484 @@
+openapi: 3.0.1
+info:
+  title: Pets Friend API
+  version: 1.0.0
+  description: API para control de animales
+
+servers:
+  - url: https://petsback-production-7a3c.up.railway.app
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+
+tags:
+  - name: Roles
+    description: Endpoints de funcionamiento de roles
+  - name: Permisos
+    description: Endpoints relacionados con los permisos
+  - name: Usuarios
+    description: Endpoints relacionados con los usuarios
+  - name: Autenticación
+    description: Endpoints relacionados con la autenticación
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/v1/role:
+    post:
+      tags:
+        - Roles
+      summary: Crea un nuevo rol
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleCreate'
+      responses:
+        '201':
+          description: Rol creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '401':
+          description:  No autorizado
+
+    get:
+      tags:
+        - Roles
+      summary: Obtiene todos los roles
+      parameters:
+        - in: query
+          name: sort
+          required:  false
+          description: Campo por el cual se ordenara
+          schema:
+            type: string
+        - in: query
+          name: order
+          required: false
+          description: Orden de los resultados (asc o desc)
+          schema:
+            type: string
+        - in: query
+          name: limit
+          required: false
+          description: limite de recursos a solicitar
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: offset
+          required: false
+          description: numero de elementos omisos para comenzar la consulta
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Roles obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+        '401':
+          description:  No autorizado
+
+  /api/v1/role/{id}:
+    get:
+      tags:
+        - Roles
+      summary: Obtiene un rol por su ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del rol a obtener
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Rol obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '401':
+          description:  No autorizado
+
+    patch:
+      tags:
+        - Roles
+      summary: Actualiza un rol existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del rol a actualizar
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdate'
+      responses:
+        '200':
+          description: Rol actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '401':
+          description:  No autorizado
+
+    delete:
+      tags:
+        - Roles
+      summary: Elimina un rol existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del rol a eliminar
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '202':
+          description: Rol eliminado exitosamente
+        '401':
+          description:  No autorizado
+
+  /api/v1/role/permissions:
+    post:
+      tags:
+        - Permisos
+      summary: Crea un nuevo permiso
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionCreate'
+      responses:
+        '201':
+          description: Permiso creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+        '401':
+          description:  No autorizado
+
+    get:
+      tags:
+        - Permisos
+      summary: Obtiene todos los permisos
+      responses:
+        '200':
+          description: Permisos obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permission'
+        '401':
+          description:  No autorizado
+
+  /api/v1/role/permissions/{id}:
+    patch:
+      tags:
+        - Permisos
+      summary: Editar permisos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionCreate'
+      responses:
+        '201':
+          description: Permiso creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+        '401':
+          description:  No autorizado
+
+    delete:
+      tags:
+        - Permisos
+      summary: Eliminar permiso
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Permiso creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+        '401':
+          description:  No autorizado
+
+
+
+  /api/v1/user/register:
+    post:
+      tags:
+        - Usuarios
+      summary: Registra un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description:  No autorizado
+
+  /api/v1/user:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene todos los usuarios
+      responses:
+        '200':
+          description: Usuarios obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description:  No autorizado
+
+  /api/v1/user/{id}:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene un usuario por su ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del usuario a obtener
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Usuario obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description:  No autorizado
+
+    patch:
+      tags:
+        - Usuarios
+      summary: Actualiza un usuario existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del usuario a actualizar
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description:  No autorizado
+
+    delete:
+      tags:
+        - Usuarios
+      summary: Elimina un usuario existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del usuario a eliminar
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '202':
+          description: Usuario eliminado exitosamente
+
+  /api/v1/auth/login:
+    post:
+      tags:
+        - Autenticación
+      summary: Inicia sesión en el sistema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authenticacion'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        roleId:
+          type: integer
+        status:
+          type: boolean
+    UserCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        roleId:
+          type: integer
+        status:
+          type: boolean
+      required: [ "email", "password" ]
+    RoleCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: boolean
+    RoleUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: boolean
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        status:
+          type: boolean
+    PermissionCreate:
+      type: object
+      properties:
+        accessName:
+          type: string
+        canCreate:
+          type: boolean
+        canRead:
+          type: boolean
+        canUpdate:
+          type: boolean
+        canDelete:
+          type: boolean
+    Permission:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        accessName:
+          type: string
+        canCreate:
+          type: boolean
+        canRead:
+          type: boolean
+        canUpdate:
+          type: boolean
+        canDelete:
+          type: boolean
+    AuthRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    Authenticacion:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+          $ref: '#/components/schemas/User'
+        token:
+          type: string

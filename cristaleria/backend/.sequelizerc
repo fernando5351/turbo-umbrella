@@ -1,0 +1,12 @@
+const { isProduction, isTest } = require('./config');
+
+let env = '';
+env = isProduction ? 'production': (isTest ? 'test' : 'development');
+
+module.exports = {
+    "env": env,
+    "config": "./database/connection.js",
+    "models-path": "./database/models",
+    "migrations-path": "./database/migrations",
+    "seeders-path": "./database/seeds"
+}
